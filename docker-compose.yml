@@ -1,0 +1,23 @@
+version: "3.8"
+services:
+  mysql:
+    image: mysql:8.0
+    container_name: user-casino-mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: mysql
+      MYSQL_DATABASE: user_service
+    ports:
+      - "3316:3306"
+    volumes:
+      - ./docker/mysql/init.sql:/docker-entrypoint-initdb.d/init.sql
+      - ./mysql_data:/var/lib/mysql
+
+  app:
+    build:
+      context: .  # Points to the current directory containing Dockerfile
+      dockerfile: Dockerfile
+    container_name: user-casino-app
+    ports:
+      - "8082:8082"
+    depends_on:
+      - mysql
